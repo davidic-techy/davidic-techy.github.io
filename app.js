@@ -1,17 +1,65 @@
 /* ---
    APP.JS
    This file contains all "highly advanced" logic.
-   It is modular, with separate classes/functions for each feature
-   to keep it clean and readable.
-
-   FEATURES:
-   1. TextScrambleEffect: A class to handle the "decoding" text animation.
-   2. TiltEffect: A function for the 3D project card hover effect.
-   3. SkillGraph: A class for the complex, interactive node map.
+   
+   This is the UPDATED version with:
+   1. Mobile Navigation Toggle logic
+   2. Live Footer Clock
+   3. Disabling expensive animations (Tilt, Scramble) on mobile
+   4. Touch event support for the Skill Graph
 --- */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- FEATURE 1: TEXT SCRAMBLE ---
+  // --- FEATURE 1: MOBILE NAVIGATION TOGGLE ---
+  const navToggle = document.getElementById("mobile-nav-toggle");
+  const mainNav = document.getElementById("main-nav");
+  const body = document.body;
+
+  if (navToggle && mainNav) {
+    navToggle.addEventListener("click", () => {
+      // Toggle classes on nav and body
+      mainNav.classList.toggle("nav-open");
+      body.classList.toggle("nav-open");
+    });
+
+    // Close menu when a link is clicked
+    mainNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("nav-open");
+        body.classList.remove("nav-open");
+      });
+    });
+  }
+
+  // --- FEATURE 2: LIVE FOOTER CLOCK ---
+  const timeEl = document.getElementById("footer-time");
+
+  function updateTime() {
+    if (!timeEl) return;
+
+    try {
+      // Get time in Lagos, WAT (UTC+1)
+      const now = new Date();
+      // Use 'Africa/Lagos' to ensure it's correct even with daylight saving changes
+      const watTime = new Date(
+        now.toLocaleString("en-US", { timeZone: "Africa/Lagos" })
+      );
+
+      const hours = watTime.getHours().toString().padStart(2, "0");
+      const minutes = watTime.getMinutes().toString().padStart(2, "0");
+
+      timeEl.textContent = `${hours}:${minutes} WAT (UTC+1)`;
+    } catch (e) {
+      console.error("Error updating time:", e);
+      // Fallback if time zone is not found
+      timeEl.textContent = "UTC+1";
+    }
+  }
+
+  updateTime(); // Run once immediately
+  setInterval(updateTime, 10000); // Update every 10 seconds
+
+  // --- FEATURE 3: TEXT SCRAMBLE ---
 
   /**
    * The TextScrambleEffect class handles the "decoding" animation.
@@ -59,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
             char = this.randomChar();
             this.queue[i].char = char;
           }
+          // Use innerHTML to render the span for the scramble char
           output += `<span class="scramble-char">${char}</span>`;
         } else {
           output += from;
@@ -82,48 +131,57 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrambleElements = document.querySelectorAll('[data-scramble="true"]');
   scrambleElements.forEach((el) => {
     const scrambler = new TextScrambleEffect(el);
-    const originalText = el.innerText;
-    el.addEventListener("mouseover", () => {
-      scrambler.setText(originalText);
-    });
+    const originalText = el.textContent; // Use textContent for the original text
+
     // Scramble on load for hero title
     if (el.classList.contains("hero-title")) {
       scrambler.setText(originalText);
     }
+
+    // Only add hover effect on non-touch devices
+    el.addEventListener("mouseover", () => {
+      if (window.innerWidth > 820) {
+        scrambler.setText(originalText);
+      }
+    });
   });
 
-  // --- FEATURE 2: 3D TILT EFFECT ---
+  // --- FEATURE 4: 3D TILT EFFECT ---
 
   /**
    * Attaches the 3D tilt effect to all elements with [data-tilt="true"]
    * This is a "vanilla JS" implementation of a popular tilt effect.
    */
   const tiltElements = document.querySelectorAll('[data-tilt="true"]');
-  tiltElements.forEach((el) => {
-    const maxTilt = 15; // Max tilt in degrees
 
-    el.addEventListener("mousemove", (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left; // x position inside element
-      const y = e.clientY - rect.top; // y position inside element
+  // Disable tilt on mobile for performance and usability
+  if (window.innerWidth > 820) {
+    tiltElements.forEach((el) => {
+      const maxTilt = 15; // Max tilt in degrees
 
-      const width = el.offsetWidth;
-      const height = el.offsetHeight;
+      el.addEventListener("mousemove", (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position inside element
+        const y = e.clientY - rect.top; // y position inside element
 
-      // Calculate tilt values (from -maxTilt to +maxTilt)
-      const rotateX = (maxTilt * (y - height / 2)) / (height / 2);
-      const rotateY = -(maxTilt * (x - width / 2)) / (width / 2);
+        const width = el.offsetWidth;
+        const height = el.offsetHeight;
 
-      el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        // Calculate tilt values (from -maxTilt to +maxTilt)
+        const rotateX = (maxTilt * (y - height / 2)) / (height / 2);
+        const rotateY = -(maxTilt * (x - width / 2)) / (width / 2);
+
+        el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+
+      el.addEventListener("mouseleave", () => {
+        el.style.transform =
+          "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+      });
     });
+  }
 
-    el.addEventListener("mouseleave", () => {
-      el.style.transform =
-        "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
-    });
-  });
-
-  // --- FEATURE 3: SKILL GRAPH ---
+  // --- FEATURE 5: SKILL GRAPH ---
 
   /**
    * The SkillGraph class creates and animates the interactive node map.
@@ -147,8 +205,15 @@ document.addEventListener("DOMContentLoaded", () => {
       this.damping = 0.75;
       this.targetDist = 100;
 
+      // Adjust physics for smaller screens
+      if (window.innerWidth < 820) {
+        this.repulsion = 2500;
+        this.targetDist = 70;
+      }
+
       this.init();
-      this.animate();
+      // Start the animation loop
+      this.animationFrame = requestAnimationFrame(this.animate.bind(this));
     }
 
     init() {
@@ -198,7 +263,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     addDrag(node) {
       const onMouseDown = (e) => {
-        e.preventDefault();
+        // e.preventDefault(); // This can prevent scrolling on touch
+        if (e.type === "touchstart") e.preventDefault(); // Only prevent default for touch
         node.isDragging = true;
       };
 
@@ -208,17 +274,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const onMouseMove = (e) => {
         if (!node.isDragging) return;
+        // Handle both mouse and touch events
+        const event = e.touches ? e.touches[0] : e;
         const { left, top } = this.container.getBoundingClientRect();
-        node.x = e.clientX - left;
-        node.y = e.clientY - top;
+
+        // Calculate new position
+        let newX = event.clientX - left;
+        let newY = event.clientY - top;
+
+        // Clamp position to be within the container boundaries
+        const { width, height } = this.container.getBoundingClientRect();
+        const elHalfWidth = node.domElement.offsetWidth / 2;
+        const elHalfHeight = node.domElement.offsetHeight / 2;
+
+        node.x = Math.max(elHalfWidth, Math.min(width - elHalfWidth, newX));
+        node.y = Math.max(elHalfHeight, Math.min(height - elHalfHeight, newY));
+
         node.vx = 0; // Stop velocity while dragging
         node.vy = 0;
       };
 
+      // --- Bind Events ---
+
+      // Desktop events
       node.domElement.addEventListener("mousedown", onMouseDown);
-      this.container.addEventListener("mouseup", onMouseUp);
-      this.container.addEventListener("mouseleave", onMouseUp);
-      this.container.addEventListener("mousemove", onMouseMove);
+
+      // Mobile touch events
+      // { passive: false } is crucial to allow preventDefault()
+      node.domElement.addEventListener("touchstart", onMouseDown, {
+        passive: false,
+      });
+      node.domElement.addEventListener("touchend", onMouseUp);
+      node.domElement.addEventListener("touchcancel", onMouseUp);
+
+      // Global move/end events
+      // We listen on `window` to handle dragging outside the container
+      window.addEventListener("mouseup", onMouseUp);
+      window.addEventListener("mouseleave", onMouseUp); // In case mouse leaves window
+      window.addEventListener("mousemove", onMouseMove);
+
+      // { passive: false } allows us to call preventDefault inside onMouseMove
+      // which stops the page from scrolling while dragging a node on mobile
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          if (node.isDragging) {
+            e.preventDefault();
+            onMouseMove(e);
+          }
+        },
+        { passive: false }
+      );
     }
 
     animate() {
@@ -232,8 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const dx = nodeA.x - nodeB.x;
           const dy = nodeA.y - nodeB.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < 1) distSq = 1; // avoid division by zero
+          let distSq = dx * dx + dy * dy;
+          if (distSq < 100) distSq = 100; // avoid extreme forces
 
           const force = this.repulsion / distSq;
           nodeA.vx += (dx / Math.sqrt(distSq)) * force;
@@ -251,6 +357,8 @@ document.addEventListener("DOMContentLoaded", () => {
       this.links.forEach((link) => {
         const nodeA = this.nodes.find((n) => n.id === link.source);
         const nodeB = this.nodes.find((n) => n.id === link.target);
+
+        if (!nodeA || !nodeB) return; // Safety check
 
         const dx = nodeB.x - nodeA.x;
         const dy = nodeB.y - nodeA.y;
@@ -279,6 +387,11 @@ document.addEventListener("DOMContentLoaded", () => {
         node.vx *= this.damping;
         node.vy *= this.damping;
 
+        // Cap velocity
+        const maxVel = 50;
+        node.vx = Math.max(-maxVel, Math.min(maxVel, node.vx));
+        node.vy = Math.max(-maxVel, Math.min(maxVel, node.vy));
+
         // Update position
         node.x += node.vx;
         node.y += node.vy;
@@ -298,7 +411,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Render
       this.render();
 
-      requestAnimationFrame(this.animate.bind(this));
+      // Continue the loop
+      this.animationFrame = requestAnimationFrame(this.animate.bind(this));
     }
 
     render() {
@@ -315,10 +429,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const nodeB = this.nodes.find((n) => n.id === link.target);
         const line = this.linkElements[i];
 
-        line.setAttribute("x1", nodeA.x);
-        line.setAttribute("y1", nodeA.y);
-        line.setAttribute("x2", nodeB.x);
-        line.setAttribute("y2", nodeB.y);
+        if (nodeA && nodeB && line) {
+          line.setAttribute("x1", nodeA.x);
+          line.setAttribute("y1", nodeA.y);
+          line.setAttribute("x2", nodeB.x);
+          line.setAttribute("y2", nodeB.y);
+        }
       });
     }
   }
@@ -337,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "Kubernetes" },
     { id: "AWS" },
     { id: "Architecture", core: true },
-    { id: "Microservices" },
+    { id: "Microservices" }, // ✅ fixed
     { id: "Kafka" },
     { id: "gRPC" },
     { id: "Security" },
@@ -363,5 +479,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { source: "Kafka", target: "Microservices" },
   ];
 
-  new SkillGraph("skill-graph-container", nodes, links);
+  // Only init graph if container exists
+  if (document.getElementById("skill-graph-container")) {
+    new SkillGraph("skill-graph-container", nodes, links);
+  }
 });
