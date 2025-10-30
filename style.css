@@ -1,0 +1,324 @@
+/* ---
+   STYLE.CSS
+   This file contains all styling for the portfolio.
+   It uses a stark black-and-white theme and modern CSS features
+   like custom properties, Grid, and 3D transforms.
+--- */
+
+/* 1. ROOT & THEME DEFINITION */
+:root {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --border-color: #333333; /* A subtle grey for borders */
+  --accent-color: #ffffff; /* Stays white for high-contrast */
+  --card-bg: #0a0a0a;
+
+  --font-primary: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-mono: "Menlo", "Consolas", "Courier New", monospace;
+}
+
+/* 2. GLOBAL RESET & BODY */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-color);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3. HEADER & NAVIGATION */
+.main-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: default;
+}
+
+.main-header nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.main-header nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  position: relative;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.main-header nav a:hover {
+  opacity: 1;
+}
+
+/* 4. MAIN CONTENT & SECTIONS */
+main {
+  width: 100%;
+}
+
+section {
+  padding: 8rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border-color);
+}
+
+section:last-child {
+  border-bottom: none;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  letter-spacing: -1px;
+}
+
+.section-subtitle {
+  font-size: 1.2rem;
+  color: #aaa;
+  margin-bottom: 3rem;
+}
+
+/* 5. HERO SECTION */
+#hero {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-top: 0;
+}
+
+.hero-title {
+  font-size: 5rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #ccc;
+  margin-bottom: 2rem;
+}
+
+.hero-status {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  color: #00ff00; /* A classic "online" green */
+  gap: 0.5rem;
+}
+
+.hero-status span:first-child {
+  color: #888;
+}
+
+.status-light {
+  width: 10px;
+  height: 10px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 6. ABOUT SECTION */
+.about-content {
+  font-size: 1.2rem;
+  max-width: 800px; /* Readable line length */
+  line-height: 1.8;
+}
+
+.about-content p {
+  margin-bottom: 1.5rem;
+  color: #ccc;
+}
+.about-content p:first-child {
+  color: var(--text-color);
+}
+
+/* 7. SKILLS NODE GRAPH (Advanced) */
+#skill-graph-container {
+  width: 100%;
+  height: 600px;
+  position: relative;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  overflow: hidden;
+  user-select: none; /* Prevent text selection while dragging */
+}
+
+/* Styles for nodes and links created by JS */
+.skill-node {
+  position: absolute;
+  padding: 0.8rem 1.2rem;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border-radius: 30px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: grab;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform; /* Performance */
+  border: 2px solid var(--text-color);
+}
+
+.skill-node:active {
+  cursor: grabbing;
+  box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.skill-node.core {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 1.1rem;
+  padding: 1rem 1.5rem;
+}
+
+/* SVG lines will be styled via JS */
+.skill-link {
+  stroke: var(--border-color);
+  stroke-width: 2px;
+}
+
+/* 8. PROJECTS SECTION (Advanced 3D Cards) */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+
+  /* This transition is key for the 3D effect */
+  transition: all 0.25s ease-out;
+  will-change: transform; /* Performance */
+}
+
+.project-card-content {
+  /* This ensures the content doesn't "break" during the 3D transform */
+  transform: translateZ(20px);
+}
+
+.project-type {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 1rem;
+}
+
+.project-card h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.project-card p {
+  color: #ccc;
+  margin-bottom: 1.5rem;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.project-tags span {
+  background-color: #222;
+  color: #ccc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+/* 9. CONTACT SECTION */
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-link {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-color);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  align-self: flex-start; /* Prevent links from stretching */
+  transition: opacity 0.3s ease;
+  opacity: 0.8;
+}
+
+.contact-link:hover {
+  opacity: 1;
+}
+
+/* 10. FOOTER */
+footer {
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: #888;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+}

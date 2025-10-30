@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>David Obiyenwa - Backend Architect</title>
+
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Link to the JavaScript file (deferred to load after HTML) -->
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <!-- The header stays at the top for easy navigation -->
+    <header class="main-header">
+      <div class="header-content">
+        <div class="logo" data-scramble="true">DAVID OBIYENWA</div>
+        <nav>
+          <ul>
+            <li><a href="#about" data-scramble="true">/ 01. ABOUT</a></li>
+            <li><a href="#skills" data-scramble="true">/ 02. SKILLS</a></li>
+            <li><a href="#projects" data-scramble="true">/ 03. PROJECTS</a></li>
+            <li><a href="#contact" data-scramble="true">/ 04. CONTACT</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main content wrapper -->
+    <main>
+      <!-- Hero Section -->
+      <section id="hero">
+        <div class="hero-content">
+          <h1 class="hero-title" data-scramble="true">BACKEND ARCHITECT</h1>
+          <p class="hero-subtitle">
+            I design and build the high-performance, scalable, and resilient
+            <br />
+            systems that power the digital world.
+          </p>
+          <div class="hero-status">
+            <span>STATUS:</span>
+            <span class="status-light"></span>
+            <span data-scramble="true">SYSTEMS ONLINE</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about">
+        <h2 data-scramble="true">01. ABOUT</h2>
+        <div class="about-content">
+          <p>
+            Hello. I'm David, a Node.js specialist and backend engineer. My
+            passion is architecting complex systems from the ground up. I don't
+            just write code; I build robust, testable, and maintainable
+            infrastructures that solve real-world problems.
+          </p>
+          <p>
+            My focus is on microservice-based architectures, real-time data
+            streaming (with Kafka, WebSocket), and ensuring 99.99% uptime. I
+            thrive on the challenges of scalability, performance optimization,
+            and data integrity.
+          </p>
+        </div>
+      </section>
+
+      <!-- Skills Section - The "Complex" JS Node Map -->
+      <section id="skills">
+        <h2 data-scramble="true">02. ARCHITECTURE & SKILLS</h2>
+        <p class="section-subtitle">
+          An interactive map of my technical expertise. Drag the nodes to see
+          the connections.
+        </p>
+        <!-- This container will be populated by app.js with the node graph -->
+        <div id="skill-graph-container">
+          <!-- SVG lines for links will be injected here -->
+          <!-- DIVs for nodes will be injected here -->
+        </div>
+      </section>
+
+      <!-- Projects Section - The 3D Cards -->
+      <section id="projects">
+        <h2 data-scramble="true">03. KEY PROJECTS</h2>
+        <div class="project-grid">
+          <!-- Project 1 -->
+          <div class="project-card" data-tilt="true">
+            <div class="project-card-content">
+              <span class="project-type">[ EVENT-DRIVEN MESH ]</span>
+              <h3>Real-Time Inventory System</h3>
+              <p>
+                A decoupled microservice system using Kafka and Node.js to
+                manage 100,000+ transactions/minute with zero overselling.
+              </p>
+              <div class="project-tags">
+                <span>Node.js</span>
+                <span>Kafka</span>
+                <span>Redis</span>
+                <span>Docker</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="project-card" data-tilt="true">
+            <div class="project-card-content">
+              <span class="project-type">[ REAL-TIME API ]</span>
+              <h3>Geolocation Tracking API</h3>
+              <p>
+                High-throughput API using WebSockets and a geospatial database
+                to track 10,000+ active clients simultaneously.
+              </p>
+              <div class="project-tags">
+                <span>Node.js</span>
+                <span>WebSocket</span>
+                <span>PostGIS</span>
+                <span>Kubernetes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="project-card" data-tilt="true">
+            <div class="project-card-content">
+              <span class="project-type">[ AUTHENTICATION SERVICE ]</span>
+              <h3>Multi-Tenant Auth Platform</h3>
+              <p>
+                Centralized authentication service (OAuth 2.0 / JWT) built to
+                secure over 50 internal applications and APIs.
+              </p>
+              <div class="project-tags">
+                <span>Node.js</span>
+                <span>Passport.js</span>
+                <span>JWT</span>
+                <span>PostgreSQL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact">
+        <h2 data-scramble="true">04. CONTACT</h2>
+        <p class="section-subtitle">
+          Let's build something exceptional together.
+        </p>
+        <div class="contact-links">
+          <a href="#" class="contact-link" data-scramble="true"
+            >EMAIL: davidobiyenwa@gmail.com</a
+          >
+          <a href="#" class="contact-link" data-scramble="true"
+            >LINKEDIN: /IN/DAVIDOBIYENWA</a
+          >
+          <a href="#" class="contact-link" data-scramble="true"
+            >GITHUB: @DAVID-ARCH</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>DAVID OBIYENWA // BACKEND ARCHITECT // LAGOS, NIGERIA</p>
+    </footer>
+  </body>
+</html>
