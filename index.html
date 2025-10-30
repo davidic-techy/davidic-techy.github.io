@@ -16,7 +16,16 @@
     <header class="main-header">
       <div class="header-content">
         <div class="logo" data-scramble="true">DAVID OBIYENWA</div>
-        <nav>
+
+        <!-- Mobile Navigation Toggle (Hamburger Menu) -->
+        <button id="mobile-nav-toggle" class="mobile-nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <!-- Navigation (now with an ID for JS) -->
+        <nav id="main-nav">
           <ul>
             <li><a href="#about" data-scramble="true">/ 01. ABOUT</a></li>
             <li><a href="#skills" data-scramble="true">/ 02. SKILLS</a></li>
@@ -147,7 +156,7 @@
         </p>
         <div class="contact-links">
           <a href="#" class="contact-link" data-scramble="true"
-            >EMAIL: davidobiyenwa@gmail.com</a
+            >EMAIL: DAVID.OBIYENWA@SYSTEM.DEV</a
           >
           <a href="#" class="contact-link" data-scramble="true"
             >LINKEDIN: /IN/DAVIDOBIYENWA</a
@@ -161,7 +170,10 @@
 
     <!-- Footer -->
     <footer>
-      <p>DAVID OBIYENWA // BACKEND ARCHITECT // LAGOS, NIGERIA</p>
+      <p>DAVID OBIYENWA // BACKEND ARCHITECT</p>
+      <p class="footer-location">
+        LAGOS, NIGERIA // <span id="footer-time">...</span>
+      </p>
     </footer>
   </body>
 </html>
